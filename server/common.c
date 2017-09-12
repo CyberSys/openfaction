@@ -37,6 +37,16 @@ void dump(char const *prefix, void const *data, size_t size, FILE *file)
     fputc('\n', file);
 }
 
+unsigned long crc_loop(unsigned long crc, unsigned char *byte, size_t size) {
+    for (size_t x = 0; x < size; x++) {
+        crc ^= byte[x];
+        for (size_t y = 0; y < 8; y++) {
+            crc = (crc >> 1) ^ (0xEDB88320 & -(crc & 1));
+        }
+    }
+    return crc;
+}
+
 void pack_little_754(void *destination, long double source, size_t exponent_size, size_t significand_size) {
     unsigned char *d = destination;
     int sign = source < 0.0;
