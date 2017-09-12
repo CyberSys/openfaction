@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <limits.h>
 
+#define toggle_nonblock(fd) (fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) ^ O_NONBLOCK) == -1)
+#define vparse(dest, fun, ...) fun(dest, (unsigned char[]) { __VA_ARG__ }, sizeof (unsigned char[]) { __VA_ARG__ })
+#define vwrite(dest, ...) (vparse(dest, write, __VA_ARG__) != sizeof (unsigned char[]) { __VA_ARG__ })
+
 void dump(char const *prefix, void const *data, size_t size, FILE *file)
 {
     int indent = fprintf(file, "%s", prefix), end_of_line;
